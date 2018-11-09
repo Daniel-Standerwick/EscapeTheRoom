@@ -27,6 +27,6 @@ public:
 private:
 
 	AController* OwnerController;
-		
+	float Reach = 100.f;
 	
 };

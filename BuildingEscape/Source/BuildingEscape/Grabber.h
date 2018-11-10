@@ -28,11 +28,20 @@ public:
 private:
 
 	AController* OwnerController;
-	float Reach = 100.f;
+	float Reach = 140.f;
 	
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* PawnInput = nullptr;
 
+
+	void FindPhysicsComponent();
+	void SetupInputComponent();
+
 	// Ray-Cast and grab whats in reach 
 	void Grab();
+	void Release();
+
+	//Return hit of rfirst physics body in reach 
+	FHitResult GetFirstPhysicsBodyInReach() const;
+
 };

@@ -37,6 +37,19 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("The PhysicsHandle Component Was Not Found On %s Please Add It Through \"Add Component\" To %s"), *GetOwner()->GetName(), *GetOwner()->GetName());
 	}
+
+	PawnInput = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (PawnInput)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("The PawnInputComponent is attached to %s"), *GetOwner()->GetName())
+
+			/// bind the input axis
+			PawnInput->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("The PawnInputComponent Was Not Found On %s Please Add It Through \"Add Component\" To %s"), *GetOwner()->GetName(), *GetOwner()->GetName());
+	}
 }
 
 
@@ -87,5 +100,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 
 
+
+}
+
+void UGrabber::Grab()
+{
 
 }

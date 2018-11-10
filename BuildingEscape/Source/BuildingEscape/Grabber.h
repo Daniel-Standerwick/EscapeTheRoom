@@ -42,6 +42,10 @@ private:
 	void Release();
 
 	//Return hit of rfirst physics body in reach 
-	FHitResult GetFirstPhysicsBodyInReach() const;
+	FHitResult GetFirstPhysicsBodyInReach();
+
+	FVector GetReachLineStart();
+
+	FVector GetReachLineEnd();
 
 };

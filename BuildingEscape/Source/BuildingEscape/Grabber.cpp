@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
 #include "DrawDebugHelpers.h"
+#include "WorldCollision.h"
 
 #define OUT
 
@@ -26,6 +27,16 @@ void UGrabber::BeginPlay()
 
 	OwnerController = GetWorld()->GetFirstPlayerController();
 	
+	/// Look for attached Physics Handle 
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
+	{
+		//Physics handle found
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("The PhysicsHandle Component Was Not Found On %s Please Add It Through \"Add Component\" To %s"), *GetOwner()->GetName(), *GetOwner()->GetName());
+	}
 }
 
 
@@ -34,7 +45,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//Get Player viewpoint 
+	///Get Player viewpoint 
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	OwnerController->GetPlayerViewPoint(OUT PlayerViewPointLocation,OUT PlayerViewPointRotation);
@@ -43,7 +54,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FVector LineTraceDirection = PlayerViewPointRotation.Vector();
 	FVector LineTraceEnd = PlayerViewPointLocation + LineTraceDirection * Reach;
 
-	//draw a red trace in the world
+	///draw a red trace in the world
 	DrawDebugLine(
 		GetWorld(),
 		PlayerViewPointLocation,
@@ -55,9 +66,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		10.f
 	);
 
-	//Ray-Cast out to reach distance
+	/// Setup Query
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
 
-	//see what we hit
+	///Line trace (Ray-Cast) out to reach distance
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(
+	OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParameters
+	);
+
+	///see what we hit
+	AActor* ActorHit = Hit.GetActor();
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
+	}
+
 
 
 }

@@ -39,8 +39,14 @@ private:
 	UPROPERTY(EditAnywhere)
 	float DoorCloseDelay = 1.f;
 
+	UPROPERTY(EditAnywhere)
+	float TriggerMass = 50.f;
+
 	float LastDoorOpenTime;
+
 	
 	AActor* ActorToOpen; //Actors that open the doors through triggers
 	AActor* Owner = GetOwner();
+
+	float GetTotalMassOfActorsOnPlate();
 };
